@@ -19,20 +19,35 @@ fs.readFile("input.txt", "utf-8", (err, data) => {
   console.log("Part2:", part2);
 });
 
-function voltage(mapping: number[], n: number): number {
-  if (n === 0) {
-    return 0;
-  }
+// function voltage(mapping: number[], n: number): number {
+//   if (n === 0) {
+//     return 0;
+//   }
+//
+//   let maxV = -1;
+//   let maxIdx = -1;
+//
+//   for (let i = 0; i <= mapping.length - n; i++) {
+//     if (maxV < mapping[i]) {
+//       maxV = mapping[i];
+//       maxIdx = i;
+//     }
+//   }
+//
+//   return Math.pow(10, n - 1) * maxV + voltage(mapping.slice(maxIdx + 1), n - 1);
+// }
 
-  let maxV = -1;
-  let maxIdx = -1;
+function voltage(mapping: number[], digits: number): number {
+  const stack: number[] = [];
+  let toRemove = mapping.length - digits;
 
-  for (let i = 0; i <= mapping.length - n; i++) {
-    if (maxV < mapping[i]) {
-      maxV = mapping[i];
-      maxIdx = i;
+  for (const digit of mapping) {
+    while (stack.length && stack[stack.length - 1] < digit && toRemove > 0) {
+      stack.pop();
+      toRemove--;
     }
+    stack.push(digit);
   }
 
-  return Math.pow(10, n - 1) * maxV + voltage(mapping.slice(maxIdx + 1), n - 1);
+  return Number(stack.slice(0, digits).join(""));
 }
